@@ -37,20 +37,33 @@ const Feed = () => {
     }
   };
 
+  function formatTime(timestamp) {
+    const now = new Date();
+    const postTime = new Date(timestamp);
+    const diffMin = now - postTime;
+    const diffHour = diffMin / (1000 * 60 * 60);
+
+    return diffHour >= 24
+      ? postTime.toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        })
+      : `${Math.floor(diffHour)}h ago`;
+  }
+
   useEffect(() => {
     const loadImg = async () => {
       const newImgUrls = {};
 
       for (const post of posts) {
         const imgUrl = await fetchImg(post.content);
-        if (imgUrl) {
-          newImgUrls[post.id] = imgUrl;
-        }
+
+        if (imgUrl) newImgUrls[post.id] = imgUrl;
       }
 
       setImageurls(newImgUrls);
 
-      // Update posts with images
       const updatedPosts = posts.map((post) => ({
         ...post,
         imgAttachment: newImgUrls[post.id] || "",
@@ -100,7 +113,7 @@ const Feed = () => {
 
             {/* Post Meta */}
             <div className="flex justify-between mt-3 text-gray-600 text-sm">
-              <span>{post.timestamp}</span>
+              <span>{formatTime(post.timestamp)}</span>
               <div className="flex space-x-3">
                 <span>❤️ {post.likeCount}</span>
                 <span>💬 {post.commentCount}</span>

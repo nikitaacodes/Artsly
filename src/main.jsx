@@ -12,7 +12,7 @@ import Profile from "./pages/Profile";
 
 //styles
 import "./index.css";
-
+import SignIn from "./components/SignIn";
 
 // Define routes here
 const appRouter = createBrowserRouter([
@@ -39,6 +39,10 @@ const appRouter = createBrowserRouter([
   {
     path: "/collaboration",
     element: <Collaboration />,
+  },
+  {
+    path: "/signin",
+    element: <SignIn />,
   },
 ]);
 

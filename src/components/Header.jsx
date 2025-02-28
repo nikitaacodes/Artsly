@@ -18,7 +18,12 @@ const Header = () => {
         {" "}
         HOme
       </Link>
-      
+      <Link to="/signin" className="font-bold text-purple-900">
+        Sign In
+      </Link>
+      <Link to="/signup" className="font-bold text-purple-900">
+        Sign Up
+      </Link>
     </div>
   );
 };

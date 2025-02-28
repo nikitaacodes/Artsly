@@ -7,8 +7,8 @@ import { API_KEY } from "../utils/constants";
 const Feed = () => {
   const [posts, setPosts] = useState(feedInfo);
   const [imgurls, setImageurls] = useState({});
+  const [likeCounter, setLikeCounter] = useState();
 
-  // Fetch image for a given query
   const fetchImg = async (query) => {
     try {
       const response = await fetch(
@@ -74,7 +74,20 @@ const Feed = () => {
     };
 
     loadImg();
-  }, [posts]);
+  }, []);
+
+  function incCount(postId) {
+    console.log("Liking post:", postId);
+
+    setPosts((prevPosts) =>
+      prevPosts.map((post) =>
+        post.id === postId
+          ? { ...post, likeCount: (post.likeCount || 0) + 1 }
+          : post
+      )
+    );
+  }
+
   return (
     <div className="w-5/12 h-screen overflow-scroll scrollbar-hidden">
       <button
@@ -107,7 +120,7 @@ const Feed = () => {
               <img
                 src={post.imgAttachment}
                 alt="Post"
-                className="mt-2 w-full h-auto rounded-lg"
+                className="mt-2 w-full h-auto rounded-lg pointer-events-auto"
               />
             )}
 
@@ -115,7 +128,10 @@ const Feed = () => {
             <div className="flex justify-between mt-3 text-gray-600 text-sm">
               <span>{formatTime(post.timestamp)}</span>
               <div className="flex space-x-3">
-                <span>❤️ {post.likeCount}</span>
+                <button onClick={() => incCount(post.id)}>
+                  {" "}
+                  <span>❤️ {post.likeCount}</span>
+                </button>
                 <span>💬 {post.commentCount}</span>
               </div>
             </div>

@@ -1,27 +1,28 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { auth } from "../firebaseConfig";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Simple form validation
     if (!email || !password) {
       setError("Please enter both email and password.");
       return;
     }
 
-    // You can call your backend authentication logic here (e.g., API call)
-    console.log("Email:", email);
-    console.log("Password:", password);
-
-    // Reset form
-    setEmail("");
-    setPassword("");
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      navigate("/"); // Redirect to home or dashboard after successful login
+    } catch (err) {
+      setError("Invalid email or password.");
+    }
   };
 
   return (
@@ -30,7 +31,6 @@ const SignIn = () => {
         Sign In
       </h2>
 
-      {/* Display error if any */}
       {error && <div className="text-red-500 text-center">{error}</div>}
 
       <form onSubmit={handleSubmit} className="mt-4">
@@ -75,7 +75,7 @@ const SignIn = () => {
         <div className="mb-4">
           <button
             type="submit"
-            className="w-full p-2 bg-purple-900 text-white rounded"
+            className="w-full p-2 bg-main text-white rounded"
           >
             Sign In
           </button>
@@ -85,7 +85,7 @@ const SignIn = () => {
       <div className="text-center">
         <p>
           Don't have an account?{" "}
-          <Link to="/signup" className="text-purple-900 font-semibold">
+          <Link to="/signup" className="text-main font-semibold">
             Sign Up
           </Link>
         </p>

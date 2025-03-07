@@ -1,7 +1,8 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-
+import store from "./redux/store";
+import { Provider } from "react-redux";
 //pages
 import Home from "./pages/Home";
 import Collaboration from "./pages/Collaboration";
@@ -13,7 +14,7 @@ import Profile from "./pages/Profile";
 //styles
 import "./index.css";
 import SignIn from "./components/SignIn";
-
+import SignUp from "./components/SignUp";
 // Define routes here
 const appRouter = createBrowserRouter([
   {
@@ -44,10 +45,18 @@ const appRouter = createBrowserRouter([
     path: "/signin",
     element: <SignIn />,
   },
+  {
+    path: "signup",
+    element: <SignUp />,
+  },
 ]);
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <RouterProvider router={appRouter} />
+    <Provider store={store}>
+      {" "}
+      {/* Wrap the entire app with Redux Provider */}
+      <RouterProvider router={appRouter} />
+    </Provider>
   </StrictMode>
 );

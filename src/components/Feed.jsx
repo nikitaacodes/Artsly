@@ -124,7 +124,7 @@ const Feed = () => {
               />
             )}
 
-            {/* Post Meta */}
+         
             <div className="flex justify-between mt-3 text-gray-600 text-sm">
               <span>{formatTime(post.timestamp)}</span>
               <div className="flex space-x-3">

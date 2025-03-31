@@ -31,4 +31,4 @@ dist-ssr
 
 firestore.rules
 firestore.indexes.json
-.firebaserc
+

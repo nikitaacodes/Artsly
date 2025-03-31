@@ -12,16 +12,26 @@ jobs:
       - name: Setup Node.js 20
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "20.x"
 
       - name: Verify Node.js version
-        run: node -v # This will print the Node.js version to confirm it's 20
+        run: |
+          node -v
+          npm -v
+          which node
+          which npm
 
       - name: Install Dependencies
         run: npm ci
 
       - name: Build
         run: npm run build
+
+      - name: Verify firebase.json exists
+        run: ls -la firebase.json
+
+      - name: Install Firebase Tools
+        run: npm install -g firebase-tools@latest
 
       - name: Deploy to Firebase
         uses: FirebaseExtended/action-hosting-deploy@v0

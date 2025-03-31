@@ -20,12 +20,6 @@ jobs:
           node -v
           echo "npm version:"
           npm -v
-          echo "Node.js location:"
-          which node
-          echo "npm location:"
-          which npm
-          echo "PATH:"
-          echo $PATH
 
       - name: Install Dependencies
         run: npm ci
@@ -34,7 +28,7 @@ jobs:
         run: npm run build
 
       - name: Verify firebase.json exists
-        run: ls -la firebase.json
+        run: test -f firebase.json && echo "firebase.json exists" || echo "firebase.json is missing"
 
       - name: Install Firebase Tools
         run: |
@@ -42,13 +36,9 @@ jobs:
           firebase --version
 
       - name: Deploy to Firebase
-        env:
-          NODE_VERSION: "20.11.1"
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_FRIENDO_5B183 }}
           channelId: live
           projectId: friendo-5b183
-          entryPoint: .
-          firebaseToolsVersion: latest

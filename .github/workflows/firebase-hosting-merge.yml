@@ -31,3 +31,4 @@ jobs:
           channelId: live
           projectId: friendo-5b183
           entryPoint: .
+          firebaseToolsVersion: latest

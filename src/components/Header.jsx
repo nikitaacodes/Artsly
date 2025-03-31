@@ -1,7 +1,8 @@
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
 import { auth } from "../firebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
+import Logo from "./Logo";
 
 const Header = () => {
   const [user, setUser] = useState(null);
@@ -14,23 +15,36 @@ const Header = () => {
   }, []);
 
   return (
-    <div className="bg-reddish py-3 w-full flex flex-row justify-evenly">
-      <Link to="/aboutus" className="font-bold text-purple-900">
-        About Us
-      </Link>
-      <Link to="/gallery" className="font-bold text-purple-900">
-        Home
-      </Link>
-
-      {!user && (
+    <div className="bg-reddish py-3 w-full flex flex-row justify-between items-center px-8">
+      {!user ? (
         <>
-          <Link to="/signin" className="font-bold text-purple-900">
-            Sign In
-          </Link>
-          <Link to="/signup" className="font-bold text-purple-900">
-            Sign Up
-          </Link>
+          <div className="flex items-center space-x-8">
+            <Link to="/gallery" className="text-white hover:text-gray-200">
+              Home
+            </Link>
+            <Link to="/aboutus" className="text-white hover:text-gray-200">
+              About Us
+            </Link>
+          </div>
+
+          <Logo />
+
+          <div className="flex items-center space-x-4">
+            <Link to="/signin" className="text-white hover:text-gray-200">
+              Sign In
+            </Link>
+            <Link
+              to="/signup"
+              className="bg-white text-red-600 px-4 py-2 rounded-md hover:bg-gray-100"
+            >
+              Sign Up
+            </Link>
+          </div>
         </>
+      ) : (
+        <div className="w-full flex justify-center">
+          <Logo />
+        </div>
       )}
     </div>
   );

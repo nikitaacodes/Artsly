@@ -1,30 +1,56 @@
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import React, { useEffect, useState, useRef } from "react";
 import { auth } from "../firebaseConfig";
+import { getDatabase, ref, get } from "firebase/database";
 
 const ProfileInfo = () => {
   const [user, setUser] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
-  const menuRef = useRef(null);//detect outside click
+  const [username, setUsername] = useState("");
+  const menuRef = useRef(null); // Detect outside click
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
+      if (currentUser) {
+        setUser(currentUser);
+        fetchUsername(currentUser.uid);
+      } else {
+        setUser(null);
+        setUsername("");
+      }
     });
+
     return () => unsubscribe();
   }, []);
+
+  const fetchUsername = async (userId) => {
+    try {
+      const db = getDatabase();
+      const userRef = ref(db, `users/${userId}/username`);
+      const snapshot = await get(userRef);
+
+      if (snapshot.exists()) {
+        setUsername(snapshot.val());
+      } else {
+        console.log("No username found for this user.");
+      }
+    } catch (error) {
+      console.error("Error fetching username:", error);
+    }
+  };
 
   const handleSignOut = async () => {
     try {
       await signOut(auth);
       console.log("User signed out");
       setUser(null);
+      setUsername("");
     } catch (error) {
       console.log("Error signing out:", error);
     }
   };
 
-  //dropdown
+  // Detect outside click for dropdown
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -40,7 +66,7 @@ const ProfileInfo = () => {
       {user && (
         <div className="border-main border rounded-[25px] w-[200px] h-[60px] py-3 px-2 font-medium text-main bg-main flex items-center justify-between">
           {/* User Avatar */}
-          <div className=" flex-shrink-0">
+          <div className="flex-shrink-0">
             <img
               src={user.photoURL || "https://via.placeholder.com/50"}
               alt="User Avatar"
@@ -50,8 +76,13 @@ const ProfileInfo = () => {
 
           {/* User Info */}
           <div className="flex-1 px-2 overflow-hidden">
-            <p className="text-white truncate">{user.displayName}</p>
-            <p className="text-xs text-gray-400 truncate">{user.email}</p>
+            <p className="text-white truncate">
+              {user.displayName || "No Name"}
+            </p>
+
+            <p className="text-xs text-gray-400 truncate">
+              {username || "No Username"}
+            </p>
           </div>
 
           {/* SVG Icon to Toggle Menu */}

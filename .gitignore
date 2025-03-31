@@ -31,4 +31,6 @@ package-lock.json
 .github/
 
 firestore.rules
+firestore.indexes.json
 .firebaserc
+firebase.json

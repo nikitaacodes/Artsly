@@ -3,14 +3,15 @@ import Header from "../components/Header";
 import Section from "../components/Section";
 import Feed from "../components/Feed";
 
+
 const Home = () => {
   return (
-    <div>
+    <div className="h-screen overflow-hidden">
       <Header />
-      <div className="flex flex-row gap-10">
-        {" "}
+      <div className="flex flex-row gap-10 h-[calc(100vh-64px)]">
         <Section />
         <Feed />
+      
       </div>
     </div>
   );

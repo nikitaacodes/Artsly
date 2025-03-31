@@ -1,7 +1,6 @@
 
 import { Link } from "react-router-dom";
 
-import Feed from "./Feed";
 import ProfileInfo from "./ProfileInfo";
 const Section = () => {
   

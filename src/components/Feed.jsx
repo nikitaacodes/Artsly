@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
-
-//Data
+import { useSelector, useDispatch } from "react-redux";
+import { toggleLike } from "../redux/slices/likesSlice";
+import { toggleSavePost } from "../redux/slices/savedPostsSlice";
 import { feedInfo } from "../utils/FeedData";
 import { API_KEY } from "../utils/constants";
 
 const Feed = () => {
   const [posts, setPosts] = useState(feedInfo);
-  const [imgurls, setImageurls] = useState({});
-  const [likeCounter, setLikeCounter] = useState();
+  const [imgUrls, setImgUrls] = useState({});
+  const dispatch = useDispatch();
+  const { likedPosts, likeCounts } = useSelector((state) => state.likes);
+  const { savedPosts } = useSelector((state) => state.savedPosts);
 
   const fetchImg = async (query) => {
     try {
@@ -30,7 +33,7 @@ const Feed = () => {
         return null;
       }
 
-      return data.photos[0].src.original; // Return the image URL
+      return data.photos[0].src.original;
     } catch (error) {
       console.error("Error fetching image:", error);
       return null;
@@ -70,29 +73,24 @@ const Feed = () => {
       }));
 
       setPosts(updatedPosts);
-      console.log("Updated Feed:", updatedPosts);
     };
 
     loadImg();
   }, []);
 
-  function incCount(postId) {
-    console.log("Liking post:", postId);
+  const handleLike = (postId) => {
+    dispatch(toggleLike(postId));
+  };
 
-    setPosts((prevPosts) =>
-      prevPosts.map((post) =>
-        post.id === postId
-          ? { ...post, likeCount: (post.likeCount || 0) + 1 }
-          : post
-      )
-    );
-  }
+  const handleSave = (postId) => {
+    dispatch(toggleSavePost(postId));
+  };
 
   return (
     <div className="w-5/12 h-screen overflow-scroll scrollbar-hidden">
       <button
         onClick={() => window.location.reload()}
-        className="mb-4 py-2 px-4 bg-sec flex mx-auto  text-black font-bold rounded-[10px]"
+        className="mb-4 py-2 px-4 bg-sec flex mx-auto text-black font-bold rounded-[10px]"
       >
         Get newer
       </button>
@@ -124,13 +122,22 @@ const Feed = () => {
               />
             )}
 
-         
             <div className="flex justify-between mt-3 text-gray-600 text-sm">
               <span>{formatTime(post.timestamp)}</span>
               <div className="flex space-x-3">
-                <button onClick={() => incCount(post.id)}>
-                  {" "}
-                  <span>❤️ {post.likeCount}</span>
+                <button onClick={() => handleLike(post.id)}>
+                  <span className={likedPosts[post.id] ? "text-red-500" : ""}>
+                    ❤️ {likeCounts[post.id] || 0}
+                  </span>
+                </button>
+                <button onClick={() => handleSave(post.id)}>
+                  <span
+                    className={
+                      savedPosts.includes(post.id) ? "text-yellow-500" : ""
+                    }
+                  >
+                    🔖
+                  </span>
                 </button>
                 <span>💬 {post.commentCount}</span>
               </div>

@@ -16,16 +16,8 @@ jobs:
 
       - name: Verify Node.js version
         run: |
-          echo "Node.js version:"
-          node -v
-          echo "npm version:"
-          npm -v
-          echo "Node.js location:"
-          which node
-          echo "npm location:"
-          which npm
-          echo "PATH:"
-          echo $PATH
+          echo "Node.js version: $(node -v)"
+          echo "npm version: $(npm -v)"
 
       - name: Install Dependencies
         run: npm ci
@@ -33,7 +25,7 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Verify firebase.json exists
+      - name: Verify `firebase.json` exists
         run: ls -la firebase.json
 
       - name: Install Firebase Tools
@@ -41,12 +33,14 @@ jobs:
           npm install -g firebase-tools@latest
           firebase --version
 
+      - name: Setup Firebase Authentication
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_FRIENDO_5B183 }}
+        run: |
+          echo "$FIREBASE_SERVICE_ACCOUNT" | jq '.' > service-account.json
+          cat service-account.json  # Optional: Debugging to verify the JSON structure
+
       - name: Deploy to Firebase
         env:
-          GOOGLE_APPLICATION_CREDENTIALS: ./service-account.json
-        run: |
-          # Create service account key file
-          echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT_FRIENDO_5B183 }}' > service-account.json
-
-          # Deploy to Firebase using service account
-          firebase deploy --only hosting --project friendo-5b183
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ github.workspace }}/service-account.json
+        run: firebase deploy --only hosting --project friendo-5b183

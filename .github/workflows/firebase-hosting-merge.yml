@@ -20,6 +20,12 @@ jobs:
           node -v
           echo "npm version:"
           npm -v
+          echo "Node.js location:"
+          which node
+          echo "npm location:"
+          which npm
+          echo "PATH:"
+          echo $PATH
 
       - name: Install Dependencies
         run: npm ci
@@ -28,7 +34,7 @@ jobs:
         run: npm run build
 
       - name: Verify firebase.json exists
-        run: test -f firebase.json && echo "firebase.json exists" || echo "firebase.json is missing"
+        run: ls -la firebase.json
 
       - name: Install Firebase Tools
         run: |
@@ -36,9 +42,11 @@ jobs:
           firebase --version
 
       - name: Deploy to Firebase
-        uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_FRIENDO_5B183 }}
-          channelId: live
-          projectId: friendo-5b183
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ./service-account.json
+        run: |
+          # Create service account key file
+          echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT_FRIENDO_5B183 }}' > service-account.json
+
+          # Deploy to Firebase using service account
+          firebase deploy --only hosting --project friendo-5b183

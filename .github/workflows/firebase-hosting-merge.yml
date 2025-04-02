@@ -29,7 +29,7 @@ jobs:
         env:
           FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_FRIENDO_5B183 }}
         run: |
-          echo "$FIREBASE_SERVICE_ACCOUNT" | base64 --decode > service-account.json
+          echo "$FIREBASE_SERVICE_ACCOUNT" > service-account.json
           ls -la service-account.json  # Debugging: Ensure file is created
 
       - name: Deploy to Firebase

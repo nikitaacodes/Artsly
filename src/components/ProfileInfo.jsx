@@ -1,7 +1,8 @@
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import React, { useEffect, useState, useRef } from "react";
 import { auth } from "../firebaseConfig";
-import { getDatabase, ref, get } from "firebase/database";
+import { getFirestore, doc, getDoc } from "firebase/firestore";
+import { updateOnlineStatus } from "../utils/friendshipUtils";
 
 const ProfileInfo = () => {
   const [user, setUser] = useState(null);
@@ -25,22 +26,27 @@ const ProfileInfo = () => {
 
   const fetchUsername = async (userId) => {
     try {
-      const db = getDatabase();
-      const userRef = ref(db, `users/${userId}/username`);
-      const snapshot = await get(userRef);
+      const db = getFirestore(); // Firestore instead of Realtime DB
+      const userDoc = doc(db, "Users", userId); // Firestore path
+      const docSnap = await getDoc(userDoc);
 
-      if (snapshot.exists()) {
-        setUsername(snapshot.val());
+      if (docSnap.exists()) {
+        setUsername(docSnap.data().username); // get the username field
       } else {
-        console.log("No username found for this user.");
+        console.log("No user document found.");
       }
     } catch (error) {
-      console.error("Error fetching username:", error);
+      console.error("Error fetching username from Firestore:", error);
     }
   };
 
   const handleSignOut = async () => {
     try {
+      const currentUser = auth.currentUser;
+      if (currentUser) {
+        // Update online status before signing out
+        await updateOnlineStatus(currentUser.uid, false);
+      }
       await signOut(auth);
       console.log("User signed out");
       setUser(null);

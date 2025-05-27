@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { updateOnlineStatus } from "../utils/friendshipUtils";
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
@@ -18,7 +19,13 @@ const SignIn = () => {
     }
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      // Update online status
+      await updateOnlineStatus(userCredential.user.uid, true);
       navigate("/"); // Redirect to home or dashboard after successful login
     } catch (err) {
       setError("Invalid email or password.");

@@ -146,7 +146,7 @@ const SignUp = () => {
         { merge: true }
       );
 
-      navigate("/dashboard");
+      navigate("/");
     } catch (error) {
       console.error("Avatar selection error:", error);
       setError("Failed to save user data. Please try again.");

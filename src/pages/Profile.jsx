@@ -43,7 +43,7 @@ const Profile = () => {
     <div className="flex h-screen bg-white text-gray-900">
       {/* Sidebar */}
       <div className="w-1/5 bg-gray-100 p-4">
-        <h2 className="text-lg font-semibold mb-4">User Settings</h2>
+        <h2 className="text-lg font-semibold mb-4">Profile settings</h2>
         <ul className="space-y-2">
           {[
             "My Account",

@@ -206,7 +206,9 @@ const ChatCondense = () => {
     () => (
       <div className="bg-white p-3">
         <div className="flex justify-between items-center">
-          <p className="text-black">Online Now ({onlineFriends})</p>
+          <p className="text-black font-semibold">
+            Online Now ({onlineFriends})
+          </p>
           <button
             onClick={handleSeeAll}
             className="text-main hover:text-main-dark cursor-pointer transition-colors duration-200"
@@ -217,7 +219,7 @@ const ChatCondense = () => {
         <OnlineFriendsIcons friends={friends} />
 
         <div className="flex justify-between items-center mt-4">
-          <p className="text-black">Messages ({inbox})</p>
+          <p className="text-black font-semibold">Messages ({inbox})</p>
           <button
             onClick={() => {
               /* TODO: Handle messages view */

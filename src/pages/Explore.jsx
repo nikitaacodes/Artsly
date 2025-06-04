@@ -101,7 +101,7 @@ const Explore = () => {
               value={searchQuery}
               onChange={handleSearchChange}
               placeholder="Search artists, topics, or categories..."
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-1 focus:border-transparent"
             />
             <button
               type="submit"

@@ -1,56 +1,54 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { setUser, setError, setLoading } from "../redux/slices/authSlice";
 
 const SignUp = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [emailId, setEmailId] = useState("");
+  const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [userName, setUserName] = useState("");
-
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  const [localError, setLocalError] = useState("");
+  const [localLoading, setLocalLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
+    setLocalError("");
+    setLocalLoading(true);
+    dispatch(setLoading(true));
 
-    if (!emailId || !password) {
-      setError("Email and password are required.");
-      return;
-    }
-
-    setLoading(true);
     try {
-      const res = await fetch("http://localhost:7777/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include", // enable sending cookies if needed
-        body: JSON.stringify({
+      const response = await axios.post(
+        "http://localhost:7777/signup",
+        {
           emailId,
           password,
           name,
           userName,
-        }),
-      });
+        },
+        {
+          withCredentials: true, // cookie with token set here
+        }
+      );
 
-      if (!res.ok) {
-        const text = await res.text();
-        throw new Error(text);
-      }
+      const userId = response.data.userId;
+      dispatch(setUser({ userId }));
 
-      const result = await res.json();
-      localStorage.setItem("userId", result.userId);
-      navigate("/");
+      navigate("/"); // redirect to homepage or dashboard
     } catch (err) {
-      console.error("Signup error:", err);
-      setError(err.message);
+      const message = err.response?.data?.message || "Signup failed";
+      setLocalError(message);
+      dispatch(setError(message));
     } finally {
-      setLoading(false);
+      setLocalLoading(false);
+      dispatch(setLoading(false));
     }
   };
+
   const goToLogin = () => {
     navigate("/login");
   };
@@ -61,11 +59,13 @@ const SignUp = () => {
         <h2 className="text-3xl font-extrabold text-center text-gray-800 mb-6">
           Create an Account
         </h2>
-        {error && (
+
+        {localError && (
           <p className="text-red-500 text-center mb-4 text-sm font-medium">
-            {error}
+            {localError}
           </p>
         )}
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="email"
@@ -101,12 +101,13 @@ const SignUp = () => {
           />
           <button
             type="submit"
-            disabled={loading}
+            disabled={localLoading}
             className="w-full py-2 text-white bg-blue-500 hover:bg-blue-600 transition duration-200 rounded-lg font-semibold"
           >
-            {loading ? "Signing Up..." : "Sign Up"}
+            {localLoading ? "Signing Up..." : "Sign Up"}
           </button>
         </form>
+
         <p className="text-sm text-center text-gray-600 mt-4">
           Already have an account?{" "}
           <span

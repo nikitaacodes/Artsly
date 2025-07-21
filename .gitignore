@@ -25,12 +25,10 @@ dist-ssr
 
 
 .env
-.firebase/
+
 .vscode/
 .github/
 
-firestore.rules
-firestore.indexes.json
 
 catList.jsx
 Accordian.jsx

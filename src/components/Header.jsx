@@ -1,52 +1,50 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import { auth } from "../firebaseConfig";
-import { onAuthStateChanged } from "firebase/auth";
-import Logo from "./Logo";
 
 const Header = () => {
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-    });
-    return () => unsubscribe();
-  }, []);
+  const isLoggedIn = !!localStorage.getItem("token");
 
   return (
-    <div className="bg-reddish py-3 w-full flex flex-row justify-between items-center px-8">
-      {!user ? (
-        <>
-          <div className="flex items-center space-x-8">
-            <Link to="/gallery" className="text-white hover:text-gray-200">
-              Home
-            </Link>
-            <Link to="/aboutus" className="text-white hover:text-gray-200">
-              About Us
-            </Link>
-          </div>
+    <header className="bg-gray-900 text-white p-4 flex justify-between items-center">
+      <h1 className="text-xl font-bold">Friendo</h1>
+      <nav className="flex space-x-4">
+        <Link to="/" className="hover:text-blue-400">
+          Home
+        </Link>
+        <Link to="/about" className="hover:text-blue-400">
+          About Us
+        </Link>
+        <Link to="/gallery" className="hover:text-blue-400">
+          Gallery
+        </Link>
 
-          <Logo />
-
-          <div className="flex items-center space-x-4">
-            <Link to="/signin" className="text-white hover:text-gray-200">
-              Sign In
+        {!isLoggedIn ? (
+          <>
+            <Link to="/signup" className="hover:text-blue-400">
+              Signup
             </Link>
-            <Link
-              to="/signup"
-              className="bg-white text-red-600 px-4 py-2 rounded-md hover:bg-gray-100"
+            <Link to="/login" className="hover:text-blue-400">
+              Login
+            </Link>
+          </>
+        ) : (
+          <>
+            <Link to="/profile" className="hover:text-blue-400">
+              Profile
+            </Link>
+            <button
+              onClick={() => {
+                localStorage.removeItem("token");
+                window.location.reload();
+              }}
+              className="hover:text-red-400"
             >
-              Sign Up
-            </Link>
-          </div>
-        </>
-      ) : (
-        <div className="w-full flex justify-center">
-          <Logo />
-        </div>
-      )}
-    </div>
+              Logout
+            </button>
+          </>
+        )}
+      </nav>
+    </header>
   );
 };
 

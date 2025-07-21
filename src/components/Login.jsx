@@ -1,16 +1,22 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { setUser } from "../redux/slices/authSlice";
+import Header from "./Header";
 
 const Login = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [emailId, setEmailId] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
+    setLoading(true);
 
     try {
       const res = await fetch("http://localhost:7777/login", {
@@ -18,46 +24,44 @@ const Login = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include", // enable sending cookies if needed
-        body: JSON.stringify({
-          emailId,
-          password,
-        }),
+        credentials: "include", // Only needed if you're using cookies/session
+        body: JSON.stringify({ emailId, password }),
       });
-
-      if (!res.ok) {
-        const text = await res.text();
-        throw new Error(text);
-      }
 
       const result = await res.json();
 
+      if (!res.ok) {
+        throw new Error(result.message || "Login failed");
+      }
+
+      // Save token to localStorage
       localStorage.setItem("token", result.token);
+
+      //Save user in Redux
+      dispatch(setUser(result.user));
+
       navigate("/");
     } catch (err) {
-      console.error("login error:", err.message);
       setError(err.message);
     } finally {
       setLoading(false);
     }
   };
-  const goToLogin = () => {
-    navigate("/login");
-  };
-  const goToSignUp = () => {
-    navigate("/signup");
-  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
       <div className="w-full max-w-md p-8 bg-white rounded-2xl shadow-lg">
+        <Header />
         <h2 className="text-3xl font-extrabold text-center text-gray-800 mb-6">
           Log In
         </h2>
+
         {error && (
           <p className="text-red-500 text-center mb-4 text-sm font-medium">
             {error}
           </p>
         )}
+
         <form onSubmit={handleLogin} className="space-y-4">
           <input
             type="email"
@@ -75,6 +79,7 @@ const Login = () => {
             required
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
+
           <button
             type="submit"
             disabled={loading}
@@ -88,7 +93,7 @@ const Login = () => {
           Don’t have an account?{" "}
           <span
             className="text-blue-500 hover:underline cursor-pointer"
-            onClick={goToSignUp}
+            onClick={() => navigate("/signup")}
           >
             Sign up
           </span>

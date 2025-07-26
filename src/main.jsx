@@ -5,6 +5,11 @@ import store from "./redux/store";
 import { Provider } from "react-redux";
 //pages
 import Home from "./pages/Home";
+
+//components
+import Settings from "./components/Settings";
+import Collaborations from "./components/Collaborations";
+import Explore from "./components/Explore";
 //styles
 import "./index.css";
 
@@ -24,15 +29,24 @@ const appRouter = createBrowserRouter([
     path: "/login",
     element: <Login />,
   },
-
-  
+  {
+    path: "/collaboration",
+    element: <Collaborations />,
+  },
+  {
+    path: "/explore",
+    element: <Explore />,
+  },
+  {
+    path: "/settings",
+    element: <Settings />,
+  },
 ]);
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Provider store={store}>
       {" "}
-  
       <RouterProvider router={appRouter} />
     </Provider>
   </StrictMode>

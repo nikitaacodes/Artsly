@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setUser } from "../redux/slices/authSlice";
-import Header from "./Header";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -51,7 +50,6 @@ const Login = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
       <div className="w-full max-w-md p-8 bg-white rounded-2xl shadow-lg">
-        <Header />
         <h2 className="text-3xl font-extrabold text-center text-gray-800 mb-6">
           Log In
         </h2>
@@ -90,7 +88,7 @@ const Login = () => {
         </form>
 
         <p className="text-sm text-center text-gray-600 mt-4">
-          Don’t have an account?{" "}
+          Dont have an account?{" "}
           <span
             className="text-blue-500 hover:underline cursor-pointer"
             onClick={() => navigate("/signup")}

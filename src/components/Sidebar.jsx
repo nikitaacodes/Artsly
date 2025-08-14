@@ -26,6 +26,13 @@ const Sidebar = () => {
           {" "}
           Settings{" "}
         </Link>
+        <Link
+          to={"/profile"}
+          className="rounded-[30px] border-black text-white m-3 px-4 py-3 bg-blue-950"
+        >
+          {" "}
+          Profile{" "}
+        </Link>
       </div>
     </div>
   );

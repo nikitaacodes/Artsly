@@ -15,6 +15,7 @@ import "./index.css";
 
 import SignUp from "./components/SignUp";
 import Login from "./components/Login";
+import Profile from "./components/Profile";
 // Define routes here
 const appRouter = createBrowserRouter([
   {
@@ -40,6 +41,10 @@ const appRouter = createBrowserRouter([
   {
     path: "/settings",
     element: <Settings />,
+  },
+  {
+    path: "/profile",
+    element: <Profile />,
   },
 ]);
 

@@ -23,7 +23,7 @@ const Login = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include", // Only needed if you're using cookies/session
+        credentials: "include", 
         body: JSON.stringify({ emailId, password }),
       });
 

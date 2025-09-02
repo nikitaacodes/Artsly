@@ -47,14 +47,21 @@ const Collaborations = () => {
   };
 
   return (
-    <div>
-      <div>
-        //allReq
-        <button onClick={allReq}></button>
-      </div>
-      <div>
-        //received request
-        <button onClick={recReq}></button>
+    <div className="mx-2 my-2">
+      <span className="font-bold text-[18px]">Collaboration Requests</span>
+      <div className="flex flex-row">
+        <button
+          className="px-4 py-1 border border-gray-300 rounded-sm"
+          onClick={allReq}
+        >
+          All
+        </button>
+        <button
+          className="px-4 py-1 border border-gray-300 rounded-sm"
+          onClick={recReq}
+        >
+          Received
+        </button>
       </div>
     </div>
   );

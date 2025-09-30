@@ -6,7 +6,7 @@ const Middlebar = () => {
     setSearchText(e.target.value);
   };
   return (
-    <div className="w-1/3 flex flex-col">
+    <div className="w-2/3 flex flex-col">
       <div className="w-full h-[50px] px-5 py-2  flex flex-row justify-center gap-10">
         <input
           type="search"
@@ -25,9 +25,13 @@ const Middlebar = () => {
       <div>
         <input
           type=" textbox"
-          className="border-1 rounded-md w-[500px] h-[100px]"
+          className="border-1 self-center rounded-md w-[500px] h-[100px] mx-10"
           placeholder="Whats running on your mind..."
         ></input>
+      </div>
+      <div>
+        hello
+        {/* story sliders */}
       </div>
     </div>
   );

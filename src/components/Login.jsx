@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setUser } from "../redux/slices/authSlice";
@@ -23,7 +23,7 @@ const Login = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include", 
+        credentials: "include",
         body: JSON.stringify({ emailId, password }),
       });
 

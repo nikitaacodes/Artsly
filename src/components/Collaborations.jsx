@@ -1,4 +1,3 @@
-import React from "react";
 import { setError, setLoading } from "../redux/slices/authSlice";
 import { useDispatch } from "react-redux";
 

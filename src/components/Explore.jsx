@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import Header from "./Header";
 
 const Explore = () => {
@@ -11,7 +11,7 @@ const Explore = () => {
     <div>
       <Header />
       <div className="w-full px-5 py-2" id="category lane">
-        <label for="cateogries" className="font-bold  text-[22px] mb-5">
+        <label htmlFor ="cateogries" className="font-bold  text-[22px] mb-5">
           {" "}
           Categories{" "}
         </label>
@@ -45,7 +45,7 @@ const Explore = () => {
           value={searchtext}
           onChange={handleSearch}
         />
-        <label for=" searchbox"> </label>
+        <label htmlFor=" searchbox"> </label>
       </div>
     </div>
   );

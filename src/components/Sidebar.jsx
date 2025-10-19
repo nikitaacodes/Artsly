@@ -7,28 +7,28 @@ const Sidebar = () => {
       <div className="pr-5 flex flex-col">
         <Link
           to={"/collaboration"}
-          className="rounded-[30px] border-black text-white m-3 px-4 py-3 bg-blue-950"
+          className="rounded-[30px] border-black text-white m-3 px-4 py-3 bg-blue-900 hover:bg-blue-950"
         >
           {" "}
           Collaboration{" "}
         </Link>
         <Link
           to={"/explore"}
-          className="rounded-[30px] border-black text-white m-3 px-4 py-3 bg-blue-950"
+          className="rounded-[30px] border-black text-white m-3 px-4 py-3 bg-blue-900 hover:bg-blue-950"
         >
           {" "}
           Explore{" "}
         </Link>
         <Link
           to={"/settings"}
-          className="rounded-[30px] border-black text-white m-3 px-4 py-3 bg-blue-950"
+          className="rounded-[30px] border-black text-white m-3 px-4 py-3  bg-blue-900 hover:bg-blue-950"
         >
           {" "}
           Settings{" "}
         </Link>
         <Link
           to={"/profile"}
-          className="rounded-[30px] border-black text-white m-3 px-4 py-3 bg-blue-950"
+          className="rounded-[30px] border-black text-white m-3 px-4 py-3  bg-blue-900 hover:bg-blue-950"
         >
           {" "}
           Profile{" "}

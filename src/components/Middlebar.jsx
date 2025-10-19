@@ -5,6 +5,7 @@ import { formatDistanceToNow } from "date-fns";
 const Middlebar = () => {
   // const [searchText, setSearchText] = useState("");
   const [story, setStory] = useState([]);
+  const [text, setText] = useState("");
   const [feed, setFeed] = useState([]);
   const dispatch = useDispatch();
 
@@ -31,7 +32,33 @@ const Middlebar = () => {
       dispatch(setLoading(false));
     }
   };
-
+  const handlePost = async () => {
+    if (!text.trim()) return;
+    dispatch(setError(""));
+    dispatch(setLoading(true));
+    try {
+      const res = await fetch("http://localhost:7777/post", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          content: text,
+        }),
+      });
+      const result = await res.json();
+      if (!res.ok) {
+        throw new Error(result.message || "failed to post");
+      }
+      console.log("post created", result);
+      setText("");
+      dispatch(setLoading(false));
+    } catch (err) {
+      dispatch(setError(err.message));
+      dispatch(setLoading(false));
+    }
+  };
   const getFeed = async () => {
     dispatch(setError(""));
     dispatch(setLoading(true));
@@ -75,11 +102,16 @@ const Middlebar = () => {
       {/* Post input */}
       <div className="flex-none relative w-[500px] mx-10">
         <textarea
+          value={text}
+          onChange={(e) => setText(e.target.value)}
           className="border-2 border-gray-300 rounded-md w-full h-[100px] p-3 pr-20 resize-none"
           placeholder="What's running on your mind..."
         ></textarea>
 
-        <button className="absolute bottom-2 right-2 bg-blue-900 text-white font-bold px-3 py-2 rounded-3xl">
+        <button
+          className="absolute bottom-2 right-2 bg-blue-900 hover:bg-blue-950 text-white font-bold px-3 py-2 rounded-3xl"
+          onClick={handlePost}
+        >
           Post
         </button>
       </div>
@@ -139,13 +171,13 @@ const Middlebar = () => {
               className="border flex flex-col w-[500px] p-2 mb-2 overflow-hidden rounded-md"
             >
               <span className="flex justify-start gap-4">
-                <p className="flex gap-2 ">
-                  <p className="border-1 rounded-[50px] w-7 h-7">
+                <div className="flex gap-2 ">
+                  <div className="border-1 rounded-[50px] w-7 h-7">
                     {" "}
                     {item.profilePic}
-                  </p>
+                  </div>
                   <p className="font-bold">{item.user.userName}</p>
-                </p>
+                </div>
                 <p className="font-light justify-center text-[14px]">
                   {formatDistanceToNow(new Date(item.createdAt), {
                     addSuffix: true,

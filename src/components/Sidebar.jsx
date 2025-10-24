@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const Sidebar = () => {
   return (
-    <div className=" w-[300px] border-r-black border-1 h-screen">
+    <div className=" w-[300px] border-r-black h-screen">
       <div className="pr-5 flex flex-col">
         <Link
           to={"/collaboration"}

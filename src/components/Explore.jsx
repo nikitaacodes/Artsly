@@ -1,4 +1,4 @@
-import  { useState } from "react";
+import { useState } from "react";
 import Header from "./Header";
 
 const Explore = () => {
@@ -11,16 +11,16 @@ const Explore = () => {
     <div>
       <Header />
       <div className="w-full px-5 py-2" id="category lane">
-        <label htmlFor ="cateogries" className="font-bold  text-[22px] mb-5">
+        <label htmlFor="cateogries" className="font-bold  text-[22px] mb-5">
           {" "}
           Categories{" "}
         </label>
         <div className="flex flex-row justify-between py-2" id="cateogry boxes">
-          <div className="w-[200px] h-[70px] bg-amber-600 hover:bg-amber-700 rounded-[5px] text-[17px] font-bold pl-3 py-2">
+          <div className="w-[200px] h-[70px] bg-amber hover:bg-amber-700 rounded-[5px] text-[17px] font-bold pl-3 py-2">
             Art
           </div>
 
-          <div className="w-[200px] h-[70px] bg-blue-600 hover:bg-blue-800 rounded-[5px] text-[17px] font-bold pl-3 py-2">
+          <div className="w-[200px] h-[70px] bg-blue-700 hover:bg-blue-800 rounded-[5px] text-[17px] font-bold pl-3 py-2">
             Music
           </div>
           <div className="w-[200px] h-[70px] bg-green-600 hover:bg-green-700 rounded-[5px] text-[17px] font-bold pl-3 py-2">

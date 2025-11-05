@@ -13,6 +13,33 @@ const Middlebar = () => {
   //   setSearchText(e.target.value);
   // };
 
+  const getComments = async () => {
+    try {
+      const res = await fetch("http://localhost:7777/comments", {
+        method: "GET",
+        credentials: "include",
+      });
+      const result = await res.json();
+      console.log("comments", result);
+    } catch (err) {
+      dispatch(setError(err.message));
+      dispatch(setLoading(false));
+    }
+  };
+  const postComments = async () => {
+    try {
+      const res = await fetch("http://localhost:7777//comments/post/:postId", {
+        method: "POST",
+        credentials: "include",
+      });
+      if (!res.ok) {
+        throw new Error(res.message || "failed to post");
+      }
+    } catch (err) {
+      dispatch(setError(err.message));
+      dispatch(setLoading(false));
+    }
+  };
   const getStory = async () => {
     dispatch(setError(""));
     dispatch(setLoading(true));
@@ -20,6 +47,9 @@ const Middlebar = () => {
       const res = await fetch("http://localhost:7777/story/feed", {
         method: "GET",
         credentials: "include",
+        body: JSON.stringify({
+          content: text,
+        }),
       });
 
       const result = await res.json();
@@ -119,7 +149,7 @@ const Middlebar = () => {
       {/* Story section */}
       <div className="mt-4 ml-10 flex flex-row gap-4 flex-wrap">
         {story.length === 0 ? (
-          <p>No feed available</p>
+          <p> </p>
         ) : (
           story.map((item, index) => (
             <div
@@ -189,7 +219,7 @@ const Middlebar = () => {
               <div className="flex flex-row justify-between">
                 {" "}
                 <p> {item.likes.length} likes</p>
-                <p> {item.comments.length} comments</p>
+                <div className=""> {item.comments.length} comments</div>
               </div>
             </div>
           ))

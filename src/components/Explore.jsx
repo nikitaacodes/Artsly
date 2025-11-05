@@ -3,6 +3,7 @@ import Header from "./Header";
 import Sidebar from "./Sidebar";
 const Explore = () => {
   const [searchtext, setSearchText] = useState("");
+  
   const handleSearch = (e) => {
     setSearchText(e.target.value);
   };
@@ -49,6 +50,10 @@ const Explore = () => {
               <div className="w-[200px] h-[70px] bg-red-600 hover:bg-red-700 rounded-[5px] text-[17px] font-bold pl-3 py-2">
                 cooking
               </div>
+            </div>
+            <div> 
+              {/* hashtags here */}
+
             </div>
           </div>
         </div>

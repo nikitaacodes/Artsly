@@ -8,6 +8,7 @@ const Profile = () => {
     userName: "",
     about: "",
   });
+  const [showToast, setShowToast] = useState(false);
 
   useEffect(() => {
     const userInfo = async () => {
@@ -31,7 +32,19 @@ const Profile = () => {
   }, []);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const updated = { ...formData, [e.target.name]: e.target.value };
+    setFormData(updated);
+
+    // Detect unsaved changes
+    if (
+      updated.name !== user.name ||
+      updated.userName !== user.userName ||
+      updated.about !== user.about
+    ) {
+      setShowToast(true);
+    } else {
+      setShowToast(false);
+    }
   };
 
   const handleUpdate = async () => {
@@ -47,6 +60,7 @@ const Profile = () => {
       console.log("Update response:", data);
 
       setUser({ ...user, ...formData });
+      setShowToast(false);
       setEditMode(false);
     } catch (err) {
       console.error("Error updating user:", err);
@@ -55,70 +69,83 @@ const Profile = () => {
 
   return (
     <div>
-      Profile
-      <div className="border w-[300px] h-[350px] rounded-tl-md rounded-tr-md">
+      <div className="w-[500px] h-[350px] rounded-tl-md rounded-tr-md overflow-hidden m-2 bg-gray-200 relative">
         {/* Green top section */}
         <div className="h-1/3 bg-green-800"></div>
 
-        {/* Gray circle */}
-        <div className="relative bottom-[50px] border-4 border-black bg-gray-500 rounded-full h-[100px] w-[100px] box-border"></div>
+        {/* Pink section */}
+        <div className="relative flex justify-between items-center px-3 pt-4 pb-2">
+          {/* Gray profile icon */}
+          <div className="absolute left-3 top-0 -translate-y-1/2 border-4 border-black bg-gray-500 rounded-full h-[80px] w-[80px]"></div>
 
-        {!editMode && user && (
-          <div className="ml-2 mt-4">
-            <div className="font-bold">{user.name}</div>
-            <p className="font-thin">{user.userName}</p>
-            <p>{user.about}</p>
-            <button
-              onClick={() => setEditMode(true)}
-              className="mt-2 px-4 py-1  text-red-800 hover:text-red-900 "
-            >
-              Edit
-            </button>
-          </div>
-        )}
+          {/* Spacer */}
+          <div className="w-[100px]"></div>
 
-        {editMode && user && (
-          <div className="ml-2 mt-4">
+          {/* Edit button */}
+          <button
+            onClick={() => setEditMode(true)}
+            className="w-fit h-fit rounded-sm px-2 font-semibold bg-blue-900 text-white"
+          >
+            Edit Profile
+          </button>
+        </div>
+
+        {/* Editable fields */}
+        {user && (
+          <div className="ml-3 mt-4">
             <input
               type="text"
               name="name"
               value={formData.name}
-              onChange={handleChange}
-              className=" p-1 w-full "
-              placeholder="Name"
+              onChange={editMode ? handleChange : undefined}
+              disabled={!editMode}
+              className={`p-1 w-full font-bold text-[28px] bg-transparent outline-none ${
+                editMode
+                  ? "border-b border-gray-400 focus:border-blue-500"
+                  : "border-none cursor-default"
+              }`}
             />
+
             <input
               type="text"
               name="userName"
               value={formData.userName}
-              onChange={handleChange}
-              className=" p-1 w-full cursor-text"
-              placeholder="Username"
+              onChange={editMode ? handleChange : undefined}
+              disabled={!editMode}
+              className={`p-1 w-full font-thin text-[18px] text-gray-600 bg-transparent outline-none ${
+                editMode
+                  ? "border-b border-gray-400 focus:border-blue-500"
+                  : "border-none cursor-default"
+              }`}
             />
+
             <textarea
               name="about"
               value={formData.about}
-              onChange={handleChange}
-              className=" p-1 w-full "
-              placeholder="About me"
+              onChange={editMode ? handleChange : undefined}
+              disabled={!editMode}
+              className={`p-1 w-full font-thin text-gray-500 bg-transparent outline-none resize-none ${
+                editMode
+                  ? "border-b border-gray-400 focus:border-blue-500"
+                  : "border-none cursor-default"
+              }`}
             />
-            <div className="flex justify-between mt-2">
-              <button
-                onClick={handleUpdate}
-                className="px-4 py-1 bg-green-600 hover:bg-green-700 text-white rounded"
-              >
-                Save
-              </button>
-              <button
-                onClick={() => setEditMode(false)}
-                className="px-4 py-1 bg-red-600 hover:bg-red-700 text-white rounded"
-              >
-                Cancel
-              </button>
-            </div>
           </div>
         )}
       </div>
+
+      {/* ✅ Toast at the bottom of the screen */}
+      {showToast && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-yellow-400 text-black px-5 py-3 rounded-lg shadow-lg flex items-center gap-4 transition-all animate-fade-up z-50">
+          <span className="font-medium"> Be Careful! You’ve made changes.</span>
+          <button
+            onClick={handleUpdate}
+            className="bg-green-700 hover:bg-green-800 text-white px-4 py-1 rounded-md"
+          >
+            Save Changes
+          </button>
+        </div>
+      )}
     </div>
   );
 };

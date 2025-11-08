@@ -5,7 +5,7 @@ import Righbar from "../components/Righbar";
 
 const Home = () => {
   return (
-    <div className="h-screen bg-amber-100 ">
+    <div className="min-h-screen bg-gray-50">
       <Header />
       <div className="w-screen flex flex-row">
         <Sidebar />

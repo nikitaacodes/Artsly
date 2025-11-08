@@ -117,113 +117,156 @@ const Middlebar = () => {
   }, []);
 
   return (
-    <div className="w-2/3 flex flex-col h-screen overflow-hidden ">
-      {/* Search and Create */}
-      <div className="w-full h-[50px] px-5 py-2 flex flex-row flex-none justify-center gap-10">
-        {/* <input
-          type="search"
-          className="border-gray-800 w-[300px] h-[30px] border-1 rounded-lg px-3 py-1"
-          placeholder="Search"
-          value={searchText}
-          onChange={handleSearch}
-        /> */}
-      </div>
-
+    <div className="w-2/3 flex flex-col h-screen overflow-hidden bg-gray-50">
       {/* Post input */}
-      <div className="flex-none relative w-[500px] mx-10">
-        <textarea
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          className="border-2 border-gray-300 rounded-md w-full h-[100px] p-3 pr-20 resize-none"
-          placeholder="What's running on your mind..."
-        ></textarea>
+      <div className="flex-none p-6 bg-white border-b border-gray-200 shadow-sm">
+        <div className="max-w-2xl mx-auto">
+          <div className="relative">
+            <textarea
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              className="w-full h-32 p-4 pr-24 border-2 border-gray-300 rounded-xl resize-none focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
+              placeholder="What's on your mind? Share your thoughts..."
+            ></textarea>
 
-        <button
-          className="absolute bottom-2 right-2 bg-blue-900 hover:bg-blue-950 text-white font-bold px-3 py-2 rounded-3xl"
-          onClick={handlePost}
-        >
-          Post
-        </button>
+            <button
+              className="absolute bottom-3 right-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold px-6 py-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+              onClick={handlePost}
+              disabled={!text.trim()}
+            >
+              Post
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* Story section */}
-      <div className="mt-4 ml-10 flex flex-row gap-4 flex-wrap">
-        {story.length === 0 ? (
-          <p> </p>
-        ) : (
-          story.map((item, index) => (
-            <div
-              key={index}
-              className="border h-[220px] w-[150px] rounded-md flex flex-col items-center"
-            >
-              {/* Username */}
+      {story.length > 0 && (
+        <div className="flex-none p-4 bg-white border-b border-gray-200 overflow-x-auto">
+          <div className="flex space-x-4 px-4">
+            {story.map((item, index) => (
               <div
                 key={index}
-                className="relative border h-full w-full rounded-md overflow-hidden"
+                className="flex-shrink-0 relative group cursor-pointer"
               >
-                {/* Media rendering */}
-                {item.mediaType === "image" && (
-                  <img
-                    src={`http://localhost:7777${item.mediaUrl}`}
-                    alt="feed media"
-                    className="w-full h-full object-cover rounded-md"
-                  />
-                )}
-                {item.mediaType === "video" && (
-                  <video
-                    src={`http://localhost:7777${item.mediaUrl}`}
-                    controls
-                    className="w-full h-[180px] object-cover rounded-md"
-                  />
-                )}
+                <div className="relative h-48 w-32 rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-2 border-blue-500">
+                  {/* Media rendering */}
+                  {item.mediaType === "image" && (
+                    <img
+                      src={`http://localhost:7777${item.mediaUrl}`}
+                      alt="story"
+                      className="w-full h-full object-cover"
+                    />
+                  )}
+                  {item.mediaType === "video" && (
+                    <video
+                      src={`http://localhost:7777${item.mediaUrl}`}
+                      className="w-full h-full object-cover"
+                      muted
+                    />
+                  )}
 
-                {/* Username overlay */}
-                <p className="flex absolute top-2 gap-2 text-white font-bold  bg-opacity-50 px-2 py-1 rounded-md">
-                  <p className="border-1 rounded-[50px] w-7 h-7">
-                    {item.profilePic}
-                  </p>{" "}
-                  <p> {item.user.userName}</p>
-                </p>
+                  {/* Gradient overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+
+                  {/* Username overlay */}
+                  <div className="absolute bottom-2 left-2 right-2 flex items-center space-x-2">
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 border-2 border-white flex items-center justify-center text-white font-bold text-xs">
+                      {item.user?.userName?.charAt(0)?.toUpperCase() || "U"}
+                    </div>
+                    <p className="text-white font-semibold text-sm truncate">
+                      {item.user?.userName || "Unknown"}
+                    </p>
+                  </div>
+                </div>
               </div>
-            </div>
-          ))
-        )}
-      </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Feed section */}
-      <div className=" flex-1  overflow-y-auto mt-4 ml-10">
-        {feed.length === 0 ? (
-          <p>No feed available</p>
-        ) : (
-          feed.map((item, index) => (
-            <div
-              key={index}
-              className="border flex flex-col w-[500px] p-2 mb-2 overflow-hidden rounded-md"
-            >
-              <span className="flex justify-start gap-4">
-                <div className="flex gap-2 ">
-                  <div className="border-1 rounded-[50px] w-7 h-7">
-                    {" "}
-                    {item.profilePic}
-                  </div>
-                  <p className="font-bold">{item.user.userName}</p>
-                </div>
-                <p className="font-light justify-center text-[14px]">
-                  {formatDistanceToNow(new Date(item.createdAt), {
-                    addSuffix: true,
-                  })}
-                </p>
-              </span>
-
-              <p>{item.content}</p>
-              <div className="flex flex-row justify-between">
-                {" "}
-                <p> {item.likes.length} likes</p>
-                <div className=""> {item.comments.length} comments</div>
+      <div className="flex-1 overflow-y-auto p-6">
+        <div className="max-w-2xl mx-auto space-y-4">
+          {feed.length === 0 ? (
+            <div className="text-center py-12">
+              <div className="text-gray-400 text-lg font-medium">
+                No posts yet. Be the first to share something!
               </div>
             </div>
-          ))
-        )}
+          ) : (
+            feed.map((item, index) => (
+              <div
+                key={index}
+                className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-200 overflow-hidden"
+              >
+                {/* Post header */}
+                <div className="p-4 border-b border-gray-100">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white font-bold">
+                        {item.user?.userName?.charAt(0)?.toUpperCase() || "U"}
+                      </div>
+                      <div>
+                        <p className="font-bold text-gray-900">
+                          {item.user?.userName || "Unknown User"}
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          {formatDistanceToNow(new Date(item.createdAt), {
+                            addSuffix: true,
+                          })}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Post content */}
+                <div className="p-4">
+                  <p className="text-gray-800 leading-relaxed">{item.content}</p>
+                </div>
+
+                {/* Post footer */}
+                <div className="px-4 py-3 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
+                  <div className="flex items-center space-x-6">
+                    <div className="flex items-center space-x-2 text-gray-600">
+                      <svg
+                        className="w-5 h-5 text-red-500"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                      <span className="font-semibold">{item.likes.length}</span>
+                    </div>
+                    <div className="flex items-center space-x-2 text-gray-600">
+                      <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                        />
+                      </svg>
+                      <span className="font-semibold">
+                        {item.comments.length}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
       </div>
     </div>
   );

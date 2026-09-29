@@ -4,11 +4,10 @@ const Righbar = () => {
   const [suggestions, setSuggestions] = useState([]);
 
   useEffect(() => {
-    // Mock suggestions - replace with actual API call
     setSuggestions([
-      { id: 1, name: "Alice Johnson", username: "@alice", avatar: "A" },
-      { id: 2, name: "Bob Smith", username: "@bob", avatar: "B" },
-      { id: 3, name: "Charlie Brown", username: "@charlie", avatar: "C" },
+      { id: 1, name: "Akash Singh", username: "@akash", avatar: "A" },
+      { id: 2, name: "Aryan Shah ", username: "@aryan_shah", avatar: "A" },
+      { id: 3, name: "Devansh Yadav", username: "@devansh", avatar: "D" },
     ]);
   }, []);
 

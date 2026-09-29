@@ -1,11 +1,56 @@
 import { useState } from "react";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
+import { userAPI } from "../utils/api";
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+
 const Explore = () => {
   const [searchtext, setSearchText] = useState("");
-  
+  const [nearbyUsers, setNearbyUsers] = useState([]);
+  const [loadingNearby, setLoadingNearby] = useState(false);
+  const [locationError, setLocationError] = useState("");
+  const currentUser = useSelector((state) => state.auth.user);
+
   const handleSearch = (e) => {
     setSearchText(e.target.value);
+  };
+
+  const findNearbyArtisans = () => {
+    setLoadingNearby(true);
+    setLocationError("");
+    if (!navigator.geolocation) {
+      setLocationError("Geolocation is not supported by your browser");
+      setLoadingNearby(false);
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        try {
+          const { latitude, longitude } = position.coords;
+          
+          if (currentUser && currentUser._id) {
+            await userAPI.updateUser(currentUser._id, {
+              location: {
+                type: "Point",
+                coordinates: [longitude, latitude],
+              },
+            });
+          }
+
+          const res = await userAPI.getNearbyUsers(longitude, latitude);
+          setNearbyUsers(res.data);
+        } catch (err) {
+          setLocationError(err.response?.data?.message || err.message);
+        } finally {
+          setLoadingNearby(false);
+        }
+      },
+      (err) => {
+        setLocationError("Unable to retrieve your location");
+        setLoadingNearby(false);
+      }
+    );
   };
 
   return (
@@ -68,6 +113,62 @@ const Explore = () => {
                 </div>
               ))}
             </div>
+          </div>
+
+          {/* Nearby Artisans Section */}
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-3xl font-bold text-gray-800 flex items-center">
+                <span className="mr-3">📍</span>
+                Nearby Artisans
+              </h2>
+              <button
+                onClick={findNearbyArtisans}
+                disabled={loadingNearby}
+                className="px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-lg shadow hover:shadow-lg transition-all"
+              >
+                {loadingNearby ? "Locating..." : "Find Nearby Artists"}
+              </button>
+            </div>
+            
+            {locationError && (
+              <div className="mb-4 text-red-600 bg-red-100 p-3 rounded-lg">
+                {locationError}
+              </div>
+            )}
+
+            {nearbyUsers.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {nearbyUsers.map((user) => (
+                  <Link
+                    key={user._id}
+                    to={`/profile/${user._id}`}
+                    className="bg-white rounded-xl shadow-md p-5 hover:shadow-xl transition-all border border-gray-200 block"
+                  >
+                    <div className="flex items-center space-x-4 mb-4">
+                      {user.profilePic ? (
+                        <img src={user.profilePic} alt={user.name} className="w-12 h-12 rounded-full object-cover" />
+                      ) : (
+                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white font-bold text-lg">
+                          {user.name.charAt(0).toUpperCase()}
+                        </div>
+                      )}
+                      <div>
+                        <h3 className="font-bold text-gray-800">{user.name}</h3>
+                        <p className="text-sm text-gray-500">@{user.userName}</p>
+                      </div>
+                    </div>
+                    <p className="text-gray-600 text-sm line-clamp-2">{user.about}</p>
+                  </Link>
+                ))}
+              </div>
+            ) : (
+              !loadingNearby && !locationError && (
+                <div className="text-gray-500 italic bg-white p-6 rounded-xl shadow-sm text-center">
+                  Click the button above to discover talented artists in your area.
+                </div>
+              )
+            )}
           </div>
 
           {/* Trending hashtags section */}
